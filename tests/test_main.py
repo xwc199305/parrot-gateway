@@ -13,7 +13,9 @@ from parrot_gateway.services.model_router import ModelRouter
 
 
 @pytest.fixture
-def client() -> TestClient:
+def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
+    monkeypatch.setenv("GATEWAY_AUTH_MODE", "static")
+    monkeypatch.setenv("DATABASE_URL", "")
     with TestClient(app) as test_client:
         yield test_client
 

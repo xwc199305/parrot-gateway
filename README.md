@@ -51,7 +51,9 @@ curl http://127.0.0.1:8000/v1/chat/completions \
   分别负责 `get_endpoint`、`build_request` 和 `parse_response`。
 - `ModelRouter` 按模型名前缀分发：`deepseek-` 使用 DeepSeek，`gpt-`、
   `o1-`、`o3-` 和 `chatgpt-` 使用 OpenAI；匹配采用最长前缀优先。
+- 网关鉴权支持 `static` 和 `database` 两种模式。`static` 适合本地测试；
+  `database` 使用 PostgreSQL 保存网关 Key 的 HMAC hash、状态、过期时间和租户信息。
 - 上游错误以原状态码和错误体透传；连接失败会返回 `502`。
 
-尚未加入数据库、API Key 管理、限流、模型路由与可观测性，这些适合在协议
-调用链稳定后作为下一阶段能力逐步接入。
+Provider API Key 始终只在服务端配置中读取，客户端提交的网关 Key 不会被转发给
+外部 Provider。数据库模式需要先创建 `gateway_api_keys` 表并写入 Key hash。

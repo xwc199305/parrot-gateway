@@ -25,7 +25,7 @@ class OpenAIAdaptor(ProviderAdaptor):
                 base_url=(base_url or settings.upstream_base_url).rstrip("/") + "/",
                 timeout=settings.request_timeout_seconds,
             ),
-            api_key if api_key is not None else settings.upstream_api_key,
+            api_key or "",
         )
 
     def get_endpoint(self, request: IRChatRequest) -> str:
